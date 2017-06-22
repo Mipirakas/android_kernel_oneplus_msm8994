@@ -1123,26 +1123,6 @@ static void synaptics_get_coordinate_point(struct synaptics_ts_data *ts)
 		(coordinate_buf[24] & 0x20) ? 0 : 2; // 1--clockwise, 0--anticlockwise, not circle, report 2
 }
 
-static void set_gesture(const char __user *buf, int gesture)
-{
-	int ret = 0;
-	struct synaptics_ts_data *ts = ts_g;
-
-	sscanf(buf, "%d", &ret);
-	if (ret == 1)
-		enabled_gestures |= 1 << (gesture - 1);
-	else if (ret == 0)
-		enabled_gestures &= ~(1 << (gesture - 1));
-
-	ts->double_enable = enabled_gestures == 0 ? 0 : 1;
-	syna_use_gesture = ts->double_enable;
-}
-
-static int gesture_enabled(int gesture)
-{
-	return (enabled_gestures & (1 << (gesture - 1))) > 0 ? 1 : 0;
-}
-
 static void gesture_judge(struct synaptics_ts_data *ts)
 {
 	unsigned int keyCode = KEY_F4;
